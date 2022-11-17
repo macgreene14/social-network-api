@@ -5,10 +5,10 @@ const reactionSchema = new Schema(
   {
     reactionId: {
       type: Schema.Types.ObjectId,
-      default: new Types.objectId(),
+      default: () => new Types.objectId(),
     },
     reactionBody: { type: String, required: true, maxLength: 280 },
-    username: { ype: String, required: true },
+    username: { type: String, required: true },
     createdAt: { type: Date, default: Date.now },
   },
   { toJSON: { virtuals: true }, id: true }
@@ -17,7 +17,7 @@ const reactionSchema = new Schema(
 // define thought schema
 const thoughtSchema = new Schema(
   {
-    thoughText: { type: String, required: true, minLength: 1, maxLength: 280 },
+    thoughtText: { type: String, required: true, minLength: 1, maxLength: 280 },
     createdAt: { type: Date, default: Date.now },
     username: { type: String, required: true },
     reactions: [reactionSchema],
@@ -27,10 +27,10 @@ const thoughtSchema = new Schema(
 
 // create a virutal property 'friendCount'
 thoughtSchema.virtual("reactionsCount").get(function () {
-  returnthis.reactions.length;
+  return this.reactions.length;
 });
 
 // initialize model
-const Thought = model("thought", userSchema);
+const Thought = model("thought", thoughtSchema);
 
-module.export = Thought;
+module.exports = Thought;

@@ -31,14 +31,48 @@ router.post("/", async (req, res) => {
   const email = req.body.email;
   try {
     const document = await User.create({ username: user, email: email });
-    return res.status.json(document);
+    return res.status(200).json(document);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "server error" });
   }
 });
 
-router.put("/:id/friends/:idFriend", async (req, res) => {
+router.put("/:id", async (req, res) => {
+  // update users in db
+  try {
+    const id = req.params.id;
+    const user = req.body.username;
+    const email = req.body.email;
+    const document = await User.findOneAndUpdate(
+      { _id: id },
+      { username: user, email: email },
+      { new: true }
+    );
+    return res.status(200).json(document);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "server error" });
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  // delete users from db
+  try {
+    const id = req.params.id;
+    const document = await User.deleteOne({ _id: id });
+    return res
+      .status(200)
+      .json({ message: "user deleted", document: document });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "server error" });
+  }
+});
+
+// Friend Subdoc Routes
+
+router.post("/:id/friends/:idFriend", async (req, res) => {
   // add friends to db
   try {
     const id = req.params.id;
@@ -76,32 +110,40 @@ router.delete("/:id/friends/:idFriend", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
-  // update users in db
+// Thought Subdoc Routes
+
+router.post("/:id/thoughts/:idThought", async (req, res) => {
+  // add thoughts to db
   try {
     const id = req.params.id;
-    const user = req.body.username;
-    const email = req.body.email;
+    const idThought = req.params.idThought;
+
     const document = await User.findOneAndUpdate(
       { _id: id },
-      { username: user, email: email },
+      { $addToSet: { thoughts: idThought } },
       { new: true }
     );
-    return res.status(200).json(document);
-  } catch (error) {
+
+    return res.status(200).json({ document });
+  } catch {
     console.log(error);
     return res.status(500).json({ message: "server error" });
   }
 });
 
-router.delete("/:id", async (req, res) => {
-  // delete users from db
+router.delete("/:id/friends/:idFriend", async (req, res) => {
+  // remove thoughts to db
   try {
     const id = req.params.id;
-    const document = await User.deleteOne({ _id: id });
-    return res
-      .status(200)
-      .json({ message: "user deleted", document: document });
+    const idThought = req.params.idThought;
+
+    const document = await User.findOneAndUpdate(
+      { _id: id },
+      { $pull: { thoughts: idThought } },
+      { new: true }
+    );
+
+    return res.status(200).json({ document });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "server error" });
