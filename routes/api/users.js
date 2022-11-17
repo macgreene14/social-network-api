@@ -131,7 +131,7 @@ router.post("/:id/thoughts/:idThought", async (req, res) => {
   }
 });
 
-router.delete("/:id/friends/:idFriend", async (req, res) => {
+router.delete("/:id/thoughts/:idThought", async (req, res) => {
   // remove thoughts to db
   try {
     const id = req.params.id;
