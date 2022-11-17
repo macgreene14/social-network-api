@@ -1,50 +1,111 @@
 const router = require("express").Router();
 const User = require("../../models/Users");
+const { Schema, model, Types } = require("mongoose");
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   // find all users in db
-  return res.status(200).json({ message: "thoughts working" });
+  try {
+    const document = await User.find();
+    return res.status(200).json(document);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ message: "server error" });
+  }
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   // find user by id in db
-  const id = req.params.id;
-  return res.status(200).json({ message: "thoughts working" });
+  try {
+    const id = req.params.id;
+    const document = await User.findOne({ _id: id });
+    return res.status(200).json({ document });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "server error" });
+  }
 });
 
-router.post("/", (req, res) => {
-  // add users to db
-  const un = req.body.username;
-  const pw = req.body.password;
-  return res.status(200).json({ message: "thoughts working" });
+router.post("/", async (req, res) => {
+  // add new users to db
+  const user = req.body.username;
+  const email = req.body.email;
+  try {
+    const document = await User.create({ username: user, email: email });
+    return res.status.json(document);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "server error" });
+  }
 });
 
-router.post("/:id/friends/:idFriend", (req, res) => {
-  // add users to db
-  const id = req.params.id;
-  const idFriend = req.params.idFriend;
+router.put("/:id/friends/:idFriend", async (req, res) => {
+  // add friends to db
+  try {
+    const id = req.params.id;
+    const idFriend = req.params.idFriend;
 
-  return res.status(200).json({ message: "thoughts working" });
+    const document = await User.findOneAndUpdate(
+      { _id: id },
+      { $addToSet: { friends: idFriend } },
+      { new: true }
+    );
+
+    return res.status(200).json({ document });
+  } catch {
+    console.log(error);
+    return res.status(500).json({ message: "server error" });
+  }
 });
 
-router.delete("/:id/friends/:idFriend", (req, res) => {
-  // add users to db
-  const id = req.params.id;
-  const idFriend = req.params.idFriend;
+router.delete("/:id/friends/:idFriend", async (req, res) => {
+  // remove friends to db
+  try {
+    const id = req.params.id;
+    const idFriend = req.params.idFriend;
 
-  return res.status(200).json({ message: "thoughts working" });
+    const document = await User.findOneAndUpdate(
+      { _id: id },
+      { $pull: { friends: idFriend } },
+      { new: true }
+    );
+
+    return res.status(200).json({ document });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "server error" });
+  }
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", async (req, res) => {
   // update users in db
-  const id = req.params.id;
-  return res.status(200).json({ message: "thoughts working" });
+  try {
+    const id = req.params.id;
+    const user = req.body.username;
+    const email = req.body.email;
+    const document = await User.findOneAndUpdate(
+      { _id: id },
+      { username: user, email: email },
+      { new: true }
+    );
+    return res.status(200).json(document);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "server error" });
+  }
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   // delete users from db
-  const id = req.params.id;
-  return res.status(200).json({ message: "thoughts working" });
+  try {
+    const id = req.params.id;
+    const document = await User.deleteOne({ _id: id });
+    return res
+      .status(200)
+      .json({ message: "user deleted", document: document });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "server error" });
+  }
 });
 
 module.exports = router;
