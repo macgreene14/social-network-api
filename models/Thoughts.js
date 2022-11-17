@@ -22,7 +22,7 @@ const thoughtSchema = new Schema(
     username: { type: String, required: true },
     reactions: [reactionSchema],
   },
-  { toJSON: { virtuals: true }, id: true }
+  { toJSON: { virtuals: true }, id: false }
 );
 
 // create a virutal property 'friendCount'

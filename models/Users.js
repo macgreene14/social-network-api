@@ -3,7 +3,12 @@ const { Schema, model, Types } = require("mongoose");
 // define user schema
 const userSchema = new Schema(
   {
-    username: { type: String, required: true, unique: true, trim: true },
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
     email: {
       type: String,
       required: true,
@@ -16,7 +21,7 @@ const userSchema = new Schema(
     thoughts: [{ type: Schema.Types.ObjectId, ref: "thought" }],
     friends: [{ type: Schema.Types.ObjectId, ref: "user" }],
   },
-  { toJSON: { virtuals: true }, id: true }
+  { toJSON: { virtuals: true }, id: false }
 );
 
 // create a virutal property 'friendCount'

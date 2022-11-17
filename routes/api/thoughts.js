@@ -78,11 +78,11 @@ router.delete("/:id", async (req, res) => {
 router.post("/:id/reactions", async (req, res) => {
   // add thoughts to db
   const id = req.params.id;
-  const reaction = req.body.reaction;
+  const reaction = req.body;
   try {
     const document = await Thought.findOneAndUpdate(
       { _id: id },
-      { reactions: { $push: reaction } },
+      { $push: { reactions: reaction } },
       { new: true }
     );
     return res.status(200).json({ document });
@@ -99,7 +99,7 @@ router.delete("/:id/reactions/:idReaction", async (req, res) => {
   try {
     const document = await Thought.findOneAndUpdate(
       { _id: id },
-      { reactions: { $pull: idReaction } },
+      { $pull: { reactions: { _id: idReaction } } },
       { new: true }
     );
     return res.status(200).json({ document });
