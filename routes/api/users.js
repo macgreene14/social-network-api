@@ -19,7 +19,9 @@ router.get("/:id", async (req, res) => {
   // find user by id in db
   try {
     const id = req.params.id;
-    const document = await User.findOne({ _id: id });
+    const document = await User.findOne({ _id: id })
+      .populate({ path: "thoughts" })
+      .populate({ path: "friends" });
     return res.status(200).json({ document });
   } catch (error) {
     console.log(error);
