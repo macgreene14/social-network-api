@@ -5,7 +5,9 @@ const { Schema, model, Types } = require("mongoose");
 router.get("/", async (req, res) => {
   // find all users in db
   try {
-    const document = await User.find();
+    const document = await User.find()
+      .populate({ path: "thoughts" })
+      .populate({ path: "friends" });
     return res.status(200).json(document);
   } catch (error) {
     console.log(error);
