@@ -5,8 +5,8 @@
   An API to interact with a social media network MongoDB database.
 
   ## Video Demonstration
-  
-  <iframe src="https://drive.google.com/file/d/106dmHxyn1rMX6mfTYbz6lAYbEgx1cHqi/preview" width="640" height="480"></iframe>
+
+https://user-images.githubusercontent.com/33014789/202746046-a09f901d-c9cd-4e9b-9bb3-3d408f745af2.mp4
 
   ## Table of Contents
   
